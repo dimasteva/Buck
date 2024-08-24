@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Buck.SignUpPage"
+             Title="SignUpPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label
+            Text="Buck"
+            Grid.Row="0"
+            Grid.Column="0"
+            FontSize="Header"
+            HorizontalOptions="Center"
+            />
+
+        <Entry
+            Grid.Row="1"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Placeholder="Name"
+            WidthRequest="250"
+            />
+        
+        <Entry
+            Grid.Row="2"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Placeholder="Last Name"
+            WidthRequest="250"
+            />
+
+        <Entry
+            Grid.Row="3"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Placeholder="Email"
+            WidthRequest="250"
+            />
+
+        <Entry
+            Grid.Row="4"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Placeholder="Password"
+            WidthRequest="250"
+            />
+
+        <Entry
+            Grid.Row="5"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Placeholder="Repeat Password"
+            WidthRequest="250"
+            />
+
+        <Button
+            Grid.Row="6"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Text="Sign up"
+            />
+
+        <Label
+            Grid.Row="7"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            Text="Already have an existing account?"
+            />
+        <Label
+            Grid.Row="8"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            TextColor="Blue">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Log in" TextColor="Blue" TextDecorations="Underline"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="LoginClicked"/>
+            </Label.GestureRecognizers>
+        </Label>
+
+    </Grid>
+</ContentPage>
