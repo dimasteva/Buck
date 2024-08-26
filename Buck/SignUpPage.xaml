@@ -14,6 +14,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Label
@@ -25,8 +26,18 @@
             />
 
         <Entry
-            x:Name="eName"
+            x:Name="eUsername"
             Grid.Row="1"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Placeholder="Username"
+            WidthRequest="250"
+            />
+
+        <Entry
+            x:Name="eName"
+            Grid.Row="2"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
@@ -36,7 +47,7 @@
         
         <Entry
             x:Name="eLastName"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
@@ -46,7 +57,7 @@
 
         <Entry
             x:Name="eEmail"
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
@@ -56,7 +67,7 @@
 
         <Entry
             x:Name="ePassword"
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
@@ -67,7 +78,7 @@
 
         <Entry
             x:Name="eRepeatPassword"
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
@@ -77,7 +88,7 @@
             />
 
         <Button
-            Grid.Row="6"
+            Grid.Row="7"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
@@ -86,13 +97,13 @@
             />
 
         <Label
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="0"
             HorizontalOptions="Center"
             Text="Already have an existing account?"
             />
         <Label
-            Grid.Row="8"
+            Grid.Row="9"
             Grid.Column="0"
             HorizontalOptions="Center"
             TextColor="Blue">

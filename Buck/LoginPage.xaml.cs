@@ -2,7 +2,7 @@ namespace Buck;
 
 public partial class LoginPage : ContentPage
 {
-    public static string connectionString = "Server=sql7.freesqldatabase.com;Database=sql7727618;User ID=sql7716092;Password=rm6vECsUfv;Port=3306;";
+    public static string connectionString = "Server=sql7.freesqldatabase.com;Database=sql7727618;User ID=sql7727618;Password=rm6vECsUfv;Port=3306;";
     public LoginPage()
 	{
 		InitializeComponent();

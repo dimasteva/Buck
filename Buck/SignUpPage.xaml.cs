@@ -5,7 +5,7 @@ namespace Buck;
 
 public partial class SignUpPage : ContentPage
 {
-	private string name, lastName, email, password, repeatedPassword;
+    private string name, lastName, email, password, repeatedPassword, username;
 	public SignUpPage()
 	{
 		InitializeComponent();
@@ -21,6 +21,12 @@ public partial class SignUpPage : ContentPage
 
     private async Task<bool> CheckCredentialsAsync()
     {
+        if (!IsValidUsername(username))
+        {
+            await DisplayAlert("Validation Error", "Invalid username. Username must be between 5 and 20 characters long, must start with a letter and can only contain letters and numbers, with no spaces.", "OK");
+            return false;
+        }
+
         if (!IsValidName(name))
         {
             await DisplayAlert("Validation Error", "Invalid name. It must start with an uppercase letter and contain only alphabetic characters.", "OK");
@@ -49,6 +55,29 @@ public partial class SignUpPage : ContentPage
         {
             await DisplayAlert("Validation Error", "Passwords do not match.", "OK");
             return false;
+        }
+
+        return true;
+    }
+
+    private bool IsValidUsername(string username)
+    {
+        if (username.Length < 5 || username.Length > 20)
+        {
+            return false;
+        }
+
+        if (!char.IsLetter(username[0]))
+        {
+            return false;
+        }
+
+        foreach (char c in username)
+        {
+            if (!char.IsLetterOrDigit(c))
+            {
+                return false;
+            }
         }
 
         return true;
@@ -95,6 +124,7 @@ public partial class SignUpPage : ContentPage
     }
     private async void SignUpClicked(object sender, EventArgs e)
     {
+        username = eUsername.Text;
         name = eName.Text;
         lastName = eLastName.Text;
         email = eEmail.Text;
@@ -123,7 +153,9 @@ public partial class SignUpPage : ContentPage
             return;
         }
 
-        var confirmationPage = new ConfirmationSignUpPage(confirmationCode);
+        Client client = new Client(username, password, name, lastName, email);
+
+        var confirmationPage = new ConfirmationSignUpPage(confirmationCode, client);
         await Navigation.PushAsync(confirmationPage);
     }
 

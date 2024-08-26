@@ -31,8 +31,8 @@
             Grid.Row="2"
             Grid.Column="0"
             Placeholder="Enter the code"
-            HorizontalOptions="Center"
             VerticalOptions="Center"
+            WidthRequest="250"
             />
 
         <Button
@@ -40,6 +40,8 @@
             Grid.Column="0"
             Text="Submit"
             Clicked="SubmitButtonClicked"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
             />
 
     </Grid>
