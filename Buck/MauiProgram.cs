@@ -18,6 +18,16 @@ namespace Buck
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            builder.Services.AddSingleton<EmailService>(sp =>
+            {
+                return new EmailService(
+                    smtpHost: "smtp.gmail.com",
+                    smtpPort: 587,
+                    smtpUser: "buckappnoreply@gmail.com",
+                    smtpPass: "IdeGas692007");
+            });
+
+            builder.Services.AddSingleton<EmailBackgroundTaskManager>();
 
             return builder.Build();
         }

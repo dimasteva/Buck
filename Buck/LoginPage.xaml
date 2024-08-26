@@ -67,7 +67,7 @@
                 </FormattedString>
             </Label.FormattedText>
             <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="SignUpClicked"/>
+                <TapGestureRecognizer Tapped="SignUpClickedAsync"/>
             </Label.GestureRecognizers>
         </Label>
 

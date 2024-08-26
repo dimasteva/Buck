@@ -25,6 +25,7 @@
             />
 
         <Entry
+            x:Name="eName"
             Grid.Row="1"
             Grid.Column="0"
             HorizontalOptions="Center"
@@ -34,6 +35,7 @@
             />
         
         <Entry
+            x:Name="eLastName"
             Grid.Row="2"
             Grid.Column="0"
             HorizontalOptions="Center"
@@ -43,6 +45,7 @@
             />
 
         <Entry
+            x:Name="eEmail"
             Grid.Row="3"
             Grid.Column="0"
             HorizontalOptions="Center"
@@ -52,21 +55,25 @@
             />
 
         <Entry
+            x:Name="ePassword"
             Grid.Row="4"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Placeholder="Password"
             WidthRequest="250"
+            IsPassword="True"
             />
 
         <Entry
+            x:Name="eRepeatPassword"
             Grid.Row="5"
             Grid.Column="0"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Placeholder="Repeat Password"
             WidthRequest="250"
+            IsPassword="True"
             />
 
         <Button
@@ -75,6 +82,7 @@
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Text="Sign up"
+            Clicked="SignUpClicked"
             />
 
         <Label
@@ -94,7 +102,7 @@
                     </FormattedString>
                 </Label.FormattedText>
             <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="LoginClicked"/>
+                <TapGestureRecognizer Tapped="LoginClickedAsync"/>
             </Label.GestureRecognizers>
         </Label>
 

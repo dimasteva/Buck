@@ -1,12 +1,35 @@
 ﻿namespace Buck
 {
     public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
+{
+    private readonly EmailBackgroundTaskManager _emailBackgroundTaskManager;
 
-            MainPage = new NavigationPage(new LoginPage());
-        }
+    public App(EmailBackgroundTaskManager emailBackgroundTaskManager)
+    {
+        InitializeComponent();
+
+        MainPage = new NavigationPage(new LoginPage());
+
+        _emailBackgroundTaskManager = emailBackgroundTaskManager;
+        _emailBackgroundTaskManager.StartBackgroundTask();
     }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+        _emailBackgroundTaskManager.StartBackgroundTask();
+    }
+
+    protected override void OnSleep()
+    {
+        base.OnSleep();
+        _emailBackgroundTaskManager.StopBackgroundTask();
+    }
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+        _emailBackgroundTaskManager.StartBackgroundTask();
+    }
+}
 }
