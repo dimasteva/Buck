@@ -6,27 +6,48 @@
 
     <Grid x:Name="gridName">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ScrollView>
-            <VerticalStackLayout Grid.Row="1" Grid.Column="0" x:Name="MessagesStackLayout">
+        <Label x:Name="lReceiverLabel"
+               Grid.Row="0"
+               Grid.Column="0"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               />
+
+        <ScrollView Grid.Row="1" Grid.Column="0">
+            <VerticalStackLayout x:Name="MessagesStackLayout">
                 
             </VerticalStackLayout>
         </ScrollView>
 
-        <HorizontalStackLayout Grid.Row="2" Grid.Column="0">
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
             <Entry
+                Grid.Row= "0"
+                Grid.Column="0"
                 x:Name="eMessage"
                 VerticalOptions="Center"
                 />
+
             <Button
+                Grid.Row= "0"
+                Grid.Column="1"
                 Text="Send"
+                VerticalOptions="Center"
                 Clicked="SendMessageAsync"
                 />
-        </HorizontalStackLayout>
-        
+        </Grid>
     </Grid>
 </ContentPage>
