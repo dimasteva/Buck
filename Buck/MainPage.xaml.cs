@@ -108,20 +108,23 @@ namespace Buck
 
         private void AddNewButton()
         {
-            Button button = new Button
+            Button newConversationButton = new Button
             {
-                Text = "Submit",
+                Text = "+",
+                CornerRadius = 50, // Poluprečnik za zaobljene ivice
+                WidthRequest = 50, // Širina dugmeta
+                HeightRequest = 50, // Visina dugmeta
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
             };
-            button.Clicked += SendNewMessageAsync;
+            newConversationButton.Clicked += SendNewMessageAsync;
 
-            ChatStackLayout.Children.Add(button);
+            ChatStackLayout.Children.Add(newConversationButton);
         }
 
         private async void SendNewMessageAsync(object sender, EventArgs e)
         {
-            return;
+            await Navigation.PushAsync(new NewChatPage());
         }
     }
 

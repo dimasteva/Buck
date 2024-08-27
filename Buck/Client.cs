@@ -126,5 +126,33 @@ namespace Buck
                 }
             }
         }
+
+        public static async Task<List<string>> SearchClientsAsync(string startsWith)
+        {
+            int usersToBeReturned = 10;
+            var users = new List<string>();
+
+            string query = "SELECT username FROM Client WHERE username LIKE @StartsWith LIMIT @Limit";
+            using (var connection = new MySqlConnection(LoginPage.connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@StartsWith", startsWith + "%");
+                    command.Parameters.AddWithValue("@Limit", usersToBeReturned);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            users.Add(reader.GetString("username"));
+                        }
+                    }
+                }
+
+            }
+            return users;
+        }
     }
 }
