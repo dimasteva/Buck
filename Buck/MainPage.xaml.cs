@@ -1,24 +1,127 @@
-﻿namespace Buck
+﻿//using Windows.Networking.NetworkOperators;
+
+namespace Buck
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
 
         public MainPage()
         {
             InitializeComponent();
+            AddChat("Username1", 5);
+            AddNewButton();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void OnMenuClicked(object sender, EventArgs e)
         {
-            count++;
+            string action = await DisplayActionSheet("Menu", "Cancel", null, "Home", "Settings", "Profile");
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            switch (action)
+            {
+                case "Home":
+                    await Navigation.PushAsync(new LoginPage());
+                    break;
+                case "Settings":
+                    await Navigation.PushAsync(new SignUpPage());
+                    break;
+                case "Profile":
+                    await Navigation.PushAsync(new LoginPage());
+                    break;
+            }
+        }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+        private void AddChat(string username, int unreadMessages)
+        {
+            // Kreirajte pravougaonik (Frame) za chat
+            var chatFrame = new Frame
+            {
+                BorderColor = Colors.Gray,
+                CornerRadius = 5,
+                Padding = new Thickness(10),
+                Margin = new Thickness(0, 0, 0, 10) // Razmak između chatova
+            };
+
+            // Koristimo Grid za postavljanje korisničkog imena i broja nepročitanih poruka
+            var grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            // Dodajte korisničko ime
+            var usernameLabel = new Label
+            {
+                Text = username,
+                FontSize = 16,
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            // Kreirajte Frame za broj nepročitanih poruka, ako ih ima
+            Frame unreadMessagesFrame = null;
+            if (unreadMessages > 0)
+            {
+                unreadMessagesFrame = new Frame
+                {
+                    BackgroundColor = Colors.Red,
+                    Padding = new Thickness(5),
+                    CornerRadius = 15,
+                    VerticalOptions = LayoutOptions.Center,
+                    Content = new Label
+                    {
+                        Text = unreadMessages.ToString(),
+                        FontSize = 16,
+                        TextColor = Colors.White,
+                        VerticalOptions = LayoutOptions.Center,
+                        HorizontalOptions = LayoutOptions.Center
+                    }
+                };
+            }
+
+            // Dodajte komponente u grid
+            Grid.SetColumn(usernameLabel, 0);
+            Grid.SetRow(usernameLabel, 0);
+            grid.Children.Add(usernameLabel);
+
+            if (unreadMessagesFrame != null)
+            {
+                Grid.SetColumn(unreadMessagesFrame, 1);
+                Grid.SetRow(unreadMessagesFrame, 0);
+                grid.Children.Add(unreadMessagesFrame);
+            }
+
+            // Dodajte grid u Frame
+            chatFrame.Content = grid;
+
+            var tapGestureRecognizer = new TapGestureRecognizer();
+            tapGestureRecognizer.Tapped += (s, e) =>
+            {
+                OnChatTapped(username);
+            };
+            chatFrame.GestureRecognizers.Add(tapGestureRecognizer);
+
+            // Dodajte Frame u StackLayout (ChatStackLayout)
+            ChatStackLayout.Children.Add(chatFrame);
+        }
+
+        private void OnChatTapped(string username)
+        {
+            DisplayAlert("HE:", username, "dd");
+        }
+
+        private void AddNewButton()
+        {
+            Button button = new Button
+            {
+                Text = "Submit",
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+            };
+            button.Clicked += SendNewMessageAsync;
+
+            ChatStackLayout.Children.Add(button);
+        }
+
+        private async void SendNewMessageAsync(object sender, EventArgs e)
+        {
+            return;
         }
     }
 
