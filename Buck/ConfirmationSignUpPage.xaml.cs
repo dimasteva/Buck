@@ -13,8 +13,6 @@ public partial class ConfirmationSignUpPage : ContentPage
 
 	private async void SubmitButtonClicked(object sender, EventArgs e)
 	{
-		await DisplayAlert("DA", "DA", "DA");
-
 		string inputCode = eCode.Text;
 
 

@@ -91,5 +91,40 @@ namespace Buck
                 }
             }
         }
+
+        public static async Task<bool> DoesAccountExistAsync(string username, string password)
+        {
+            using (var conn = new MySqlConnection(LoginPage.connectionString))
+            {
+                try
+                {
+                    await conn.OpenAsync();
+
+                    string query = "SELECT COUNT(*) " +
+                                   "FROM Client " +
+                                   "WHERE username = @Username AND password = @Password";
+
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@Password", password);
+
+                        long count = (long)await cmd.ExecuteScalarAsync();
+
+                        return count > 0;
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"MySQL Error: {ex.Message}");
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+                    return false;
+                }
+            }
+        }
     }
 }

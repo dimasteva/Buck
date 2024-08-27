@@ -22,15 +22,17 @@
             />
 
         <Entry
+            x:Name="eUsername"
             Grid.Row="1"
             Grid.Column="0"
-            Placeholder="Enter username or email"
+            Placeholder="Enter username"
             VerticalOptions="Center"
             HorizontalOptions="Center"
             WidthRequest="250"
             />
 
         <Entry
+            x:Name="ePassword"
             Grid.Row="2"
             Grid.Column="0"
             Placeholder="Enter password"
@@ -47,6 +49,7 @@
             HorizontalOptions="Center"
             VerticalOptions="Center"
             WidthRequest="150"
+            Clicked="LoginClickedAsync"
             />
 
         <Label
