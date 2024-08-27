@@ -33,7 +33,7 @@ public partial class ConfirmationSignUpPage : ContentPage
 			return;
 		}
 
-		var mainPage = new MainPage();
+		var mainPage = new MainPage(_client);
 		Navigation.InsertPageBefore(mainPage, Navigation.NavigationStack.FirstOrDefault());
 		await Navigation.PopToRootAsync();
 	}

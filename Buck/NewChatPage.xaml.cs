@@ -2,9 +2,11 @@ namespace Buck;
 
 public partial class NewChatPage : ContentPage
 {
-	public NewChatPage()
+	Client client;
+	public NewChatPage(Client client)
 	{
 		InitializeComponent();
+		this.client = client;
 	}
 
 	private async void SearchUsersAsync(object sender, EventArgs e)
@@ -21,6 +23,11 @@ public partial class NewChatPage : ContentPage
 
         foreach (string user in users)
 		{
+			if (user == client.Username)
+			{
+				continue;
+			}
+
             var userFrame = new Frame
             {
                 //BorderColor = Colors.Gray,
@@ -42,7 +49,7 @@ public partial class NewChatPage : ContentPage
 			var tapUserFrame = new TapGestureRecognizer();
 			tapUserFrame.Tapped += (s, e) =>
 			{
-				UserSelected(user);
+				UserSelectedAsync(user);
 			};
 			userFrame.GestureRecognizers.Add(tapUserFrame);
 
@@ -52,8 +59,9 @@ public partial class NewChatPage : ContentPage
 		
 	}
 
-	private void UserSelected(string user)
+	private async void UserSelectedAsync(string user)
 	{
-
-	}
+        await Navigation.PushAsync(new ChatPage(client, user));
+        Navigation.RemovePage(this);
+    }
 }

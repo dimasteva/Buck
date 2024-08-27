@@ -26,7 +26,10 @@ public partial class LoginPage : ContentPage
 			return;
 		}
 
-        var mainPage = new MainPage();
+		Dictionary<string, string> keyValuePairs = await Client.GetDataWithUsername(_username);
+		Client client = new Client(_username, _password, keyValuePairs["clientName"], keyValuePairs["clientLastName"], keyValuePairs["email"]);
+
+        var mainPage = new MainPage(client);
         Navigation.InsertPageBefore(mainPage, Navigation.NavigationStack.FirstOrDefault());
         await Navigation.PopToRootAsync();
     }

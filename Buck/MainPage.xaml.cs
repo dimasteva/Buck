@@ -4,12 +4,13 @@ namespace Buck
 {
     public partial class MainPage : ContentPage
     {
-
-        public MainPage()
+        public Client client;
+        public MainPage(Client client)
         {
             InitializeComponent();
             AddChat("Username1", 5);
             AddNewButton();
+            this.client = client;
         }
 
         private async void OnMenuClicked(object sender, EventArgs e)
@@ -124,7 +125,7 @@ namespace Buck
 
         private async void SendNewMessageAsync(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NewChatPage());
+            await Navigation.PushAsync(new NewChatPage(client));
         }
     }
 

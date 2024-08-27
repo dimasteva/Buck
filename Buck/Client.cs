@@ -13,6 +13,12 @@ namespace Buck
         private string _lastName;
         private string _email;
 
+        public string Username
+        {
+            get { return _username; }
+            set { _username = value; }
+        }
+
         public Client(string username, string password, string name, string lastName, string email)
         {
             _username = username;
@@ -153,6 +159,37 @@ namespace Buck
 
             }
             return users;
+        }
+
+        public static async Task<Dictionary<string, string>> GetDataWithUsername(string username)
+        {
+            var result = new Dictionary<string, string>();
+
+            string query = "SELECT username, email, clientName, clientLastName, password FROM Client WHERE username = @Username LIMIT 1";
+
+            using (var connection = new MySqlConnection(LoginPage.connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Username", username);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            result["username"] = reader.GetString("username");
+                            result["email"] = reader.GetString("email");
+                            result["clientName"] = reader.GetString("clientName");
+                            result["clientLastName"] = reader.GetString("clientLastName");
+                            result["password"] = reader.GetString("password");
+                        }
+                    }
+                }
+            }
+
+            return result.Count > 0 ? result : null; // Vraća null ako nema rezultata
         }
     }
 }
