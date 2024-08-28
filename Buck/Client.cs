@@ -192,34 +192,5 @@ namespace Buck
 
             return result.Count > 0 ? result : null; // Vraća null ako nema rezultata
         }
-
-        public async Task<bool> SendMessageAsync(string content, string receiver)
-        {
-            string query = "INSERT INTO Messages (senderId, receiverId, content) VALUES (@SenderId, @ReceiverId, @Content);";
-            try
-            {
-                using (var connection = new MySqlConnection(LoginPage.connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    using (var command = new MySqlCommand(query, connection))
-                    {
-                        // Dodajte parametre u SQL upit
-                        command.Parameters.AddWithValue("@SenderId", _username);
-                        command.Parameters.AddWithValue("@ReceiverId", receiver);
-                        command.Parameters.AddWithValue("@Content", content);
-
-                        // Izvršite upit
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return false;
-            }
-            return true;
-        }
     }
 }

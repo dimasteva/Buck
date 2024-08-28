@@ -8,9 +8,19 @@ namespace Buck
         public MainPage(Client client)
         {
             InitializeComponent();
-            AddChat("Username1", 5);
-            AddNewButton();
             this.client = client;
+            ShowConversations();
+            AddNewButton();
+        }
+
+        private async void ShowConversations()
+        {
+            List<(string SenderId, int UnreadCount)> unreadMessages = await Message.GetUnreadMessagesBySenderAsync(client.Username);
+
+            foreach (var item in unreadMessages)
+            {
+                AddChat(item.SenderId, item.UnreadCount);
+            }
         }
 
         private async void OnMenuClicked(object sender, EventArgs e)
@@ -65,6 +75,7 @@ namespace Buck
                     Padding = new Thickness(5),
                     CornerRadius = 15,
                     VerticalOptions = LayoutOptions.Center,
+                    MinimumWidthRequest = 40,
                     Content = new Label
                     {
                         Text = unreadMessages.ToString(),
