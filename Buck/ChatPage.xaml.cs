@@ -10,13 +10,16 @@ public partial class ChatPage : ContentPage
     bool _isRunning;
 	public ChatPage(Client client, string receiver)
 	{
-		InitializeComponent();
-		_receiver = receiver;
+        //System.Diagnostics.Debug.WriteLine("uso konstruktor");
+        InitializeComponent();
+        _receiver = receiver;
 		_client = client;
 		CreateReceiverLabel();
+        //System.Diagnostics.Debug.WriteLine("kreiro labelu ");
         int checkDatabaseIntervalSeconds = 5;
         StartChecking(checkDatabaseIntervalSeconds);
-	}
+        //System.Diagnostics.Debug.WriteLine("startovo cekiranje");
+    }
 
     private async void StartChecking(int seconds)
     {
@@ -24,6 +27,7 @@ public partial class ChatPage : ContentPage
         while(_isRunning)
         {
             CheckNewMessages();
+            System.Diagnostics.Debug.WriteLine("proso checkmessages");
 
             await Task.Delay(seconds * 1000);
         }
@@ -31,8 +35,8 @@ public partial class ChatPage : ContentPage
 
     private async void CheckNewMessages()
     {
-        var unreadMessages = await Message.GetUnreadMessagesAsync(_receiver, _client.Username);
-
+        var unreadMessages = Message.GetUnreadMessages(_receiver, _client.Username);
+        System.Diagnostics.Debug.WriteLine("proso getunreadmessages");
         foreach (var message in unreadMessages)
         {
             ShowMessageAsync(message.Content, "received");

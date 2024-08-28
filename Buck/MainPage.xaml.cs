@@ -13,9 +13,9 @@ namespace Buck
             AddNewButton();
         }
 
-        private async void ShowConversations()
+        private void ShowConversations()
         {
-            List<(string SenderId, int UnreadCount)> unreadMessages = await Message.GetUnreadMessagesBySenderAsync(client.Username);
+            List<(string SenderId, int UnreadCount)> unreadMessages = Message.GetUnreadMessagesBySender(client.Username);
 
             foreach (var item in unreadMessages)
             {

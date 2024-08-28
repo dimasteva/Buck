@@ -47,15 +47,15 @@ namespace Buck
                     }
                 }
             }
-            catch (Exception ex)
+            catch (MySqlException e)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine("PUKO SendMessageAsync" + e.Message);
                 return false;
             }
             return true;
         }
 
-        public static async Task<List<(string SenderId, int UnreadCount)>> GetUnreadMessagesBySenderAsync(string receiverId)
+        public static List<(string SenderId, int UnreadCount)> GetUnreadMessagesBySender(string receiverId)
         {
             var result = new List<(string SenderId, int UnreadCount)>();
 
@@ -67,15 +67,15 @@ namespace Buck
 
             using (var connection = new MySqlConnection(LoginPage.connectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
 
                 using (var command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ReceiverId", receiverId);
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
-                        while (await reader.ReadAsync())
+                        while (reader.Read())
                         {
                             string senderId = reader.GetString("senderId");
                             int unreadCount = reader.GetInt32("UnreadCount");
@@ -89,62 +89,88 @@ namespace Buck
             return result;
         }
 
-        public static async Task<List<Message>> GetUnreadMessagesAsync(string senderId, string receiverId)
+        public static List<Message> GetUnreadMessages(string senderId, string receiverId)
         {
             var messages = new List<Message>();
-
-            using (var connection = new MySqlConnection(LoginPage.connectionString))
+            try
             {
-                await connection.OpenAsync();
+                using (var connection = new MySqlConnection(LoginPage.connectionString))
+                {
+                    connection.Open();
+                    //System.Diagnostics.Debug.WriteLine("otvorio konekciju");
 
-                string query = @"
+                    string query = @"
                 SELECT senderId, receiverId, content, timestamp 
                 FROM Messages 
                 WHERE receiverId = @ReceiverId AND senderId = @SenderId AND isRead = 0;";
 
-                using (var command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ReceiverId", receiverId);
-                    command.Parameters.AddWithValue("@SenderId", senderId);
-
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var command = new MySqlCommand(query, connection))
                     {
-                        while (await reader.ReadAsync())
+                        command.Parameters.AddWithValue("@ReceiverId", receiverId);
+                        command.Parameters.AddWithValue("@SenderId", senderId);
+                        System.Diagnostics.Debug.WriteLine("ovde je linija1");
+                        using (var reader = command.ExecuteReader())
                         {
-                            var message = new Message(
-                                reader.GetString("senderId"),
-                                reader.GetString("receiverId"),
-                                reader.GetString("content"),
-                                reader.GetDateTime("timestamp")
-                            );
+                            while (reader.Read())
+                            {
+                                System.Diagnostics.Debug.WriteLine("ovde je linija2");
+                                var senderIdValue = reader.GetString("senderId");
+                                System.Diagnostics.Debug.WriteLine(senderIdValue);
+                                var receiverIdValue = reader.GetString("receiverId");
+                                System.Diagnostics.Debug.WriteLine(receiverIdValue);
+                                var contentValue = reader.GetString("content");
+                                System.Diagnostics.Debug.WriteLine(contentValue);
+                                DateTime timestampValue = DateTime.Now;
+                                try
+                                {
+                                   timestampValue  = reader.GetDateTime("timestamp");
+                                }
+                                catch (Exception e)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(e.ToString());
+                                }
+                                var message = new Message(senderIdValue, receiverIdValue, contentValue, timestampValue);
+                                System.Diagnostics.Debug.WriteLine("ovde je linija3");
 
-                            messages.Add(message);
+                                messages.Add(message);
+                            }
                         }
                     }
                 }
             }
+            catch (MySqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine("PUKO GetUnreadMessages" + e.Message);
+            }
 
+            System.Diagnostics.Debug.WriteLine("uspesno se izvrsio getunreadmessages");
             return messages;
         }
 
-        public static async Task MarkMessagesAsReadAsync(string receiverId, string senderId)
+        public static async Task MarkMessagesAsReadAsync(string senderId, string receiverId)
         {
-            using (var connection = new MySqlConnection(LoginPage.connectionString))
+            try
             {
-                await connection.OpenAsync();
-
-                string updateQuery = @"
+                using (var connection = new MySqlConnection(LoginPage.connectionString))
+                {
+                    await connection.OpenAsync();
+                    string updateQuery = @"
                 UPDATE Messages 
                 SET isRead = 1 
                 WHERE receiverId = @ReceiverId AND senderId = @SenderId AND isRead = 0;";
 
-                using (var command = new MySqlCommand(updateQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@ReceiverId", receiverId);
-                    command.Parameters.AddWithValue("@SenderId", senderId);
+                    using (var command = new MySqlCommand(updateQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@ReceiverId", receiverId);
+                        command.Parameters.AddWithValue("@SenderId", senderId);
 
-                    await command.ExecuteNonQueryAsync();
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
+            }
+            catch (MySqlException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("PUKO MarkMessagesAsReadAsync" + ex.ToString());
             }
         }
     }
