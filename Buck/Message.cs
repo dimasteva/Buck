@@ -67,9 +67,16 @@ namespace Buck
 
             string query = @"
             SELECT senderId, 
-            IFNULL(SUM(CASE WHEN isRead = 0 THEN 1 ELSE 0 END), 0) AS UnreadCount
-            FROM Messages
-            WHERE receiverId = @ReceiverId
+                   IFNULL(SUM(CASE WHEN receiverId = @ReceiverId AND isRead = 0 THEN 1 ELSE 0 END), 0) AS UnreadCount
+            FROM (
+                SELECT senderId, receiverId, isRead
+                FROM Messages
+                WHERE receiverId = @ReceiverId
+                UNION ALL
+                SELECT receiverId AS senderId, senderId AS receiverId, 1 AS isRead
+                FROM Messages
+                WHERE senderId = @ReceiverId
+            ) AS AllMessages
             GROUP BY senderId
             ORDER BY UnreadCount DESC;
             ";
@@ -94,11 +101,43 @@ namespace Buck
                     }
                 }
             }
-            
+
             return result;
         }
 
 
+        public static List<string> GetReceiverIdsBySender(string senderId)
+        {
+            var result = new List<string>();
+
+            string query = @"
+            SELECT DISTINCT receiverId
+            FROM Messages
+            WHERE senderId = @SenderId;
+            ";
+
+            using (var connection = new MySqlConnection(LoginPage.connectionString))
+            {
+                connection.Open();
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@SenderId", senderId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string receiverId = reader.GetString("receiverId");
+
+                            result.Add(receiverId);
+                        }
+                    }
+                }
+            }
+            ///////////
+            return result;
+        }
 
         public static List<Message> GetUnreadMessages(string senderId, string receiverId)
         {
