@@ -39,7 +39,7 @@ namespace Buck
         private void ShowConversationsAndButton()
         {
             ChatStackLayout.Clear();
-            List<(string SenderId, int UnreadCount)> unreadMessages = Message.GetUnreadMessagesBySender(client.Username);
+            List<(string SenderId, int UnreadCount)> unreadMessages = Message.GetUnreadOrZeroMessagesBySender(client.Username);
 
             foreach (var item in unreadMessages)
             {
@@ -87,6 +87,7 @@ namespace Buck
             {
                 Text = username,
                 FontSize = 16,
+                Padding = new Thickness(10),
                 VerticalOptions = LayoutOptions.Center
             };
 
@@ -163,8 +164,6 @@ namespace Buck
         private async void SendNewMessageAsync(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new NewChatPage(client));
-
-            await Navigation.PopAsync();
         }
 
         protected override void OnDisappearing()

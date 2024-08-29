@@ -61,15 +61,18 @@ namespace Buck
             return true;
         }
 
-        public static List<(string SenderId, int UnreadCount)> GetUnreadMessagesBySender(string receiverId)
+        public static List<(string SenderId, int UnreadCount)> GetUnreadOrZeroMessagesBySender(string receiverId)
         {
             var result = new List<(string SenderId, int UnreadCount)>();
 
             string query = @"
-            SELECT senderId, COUNT(*) AS UnreadCount
+            SELECT senderId, 
+            IFNULL(SUM(CASE WHEN isRead = 0 THEN 1 ELSE 0 END), 0) AS UnreadCount
             FROM Messages
-            WHERE receiverId = @ReceiverId AND isRead = 0
-            GROUP BY senderId;";
+            WHERE receiverId = @ReceiverId
+            GROUP BY senderId
+            ORDER BY UnreadCount DESC;
+            ";
 
             using (var connection = new MySqlConnection(LoginPage.connectionString))
             {
@@ -91,9 +94,11 @@ namespace Buck
                     }
                 }
             }
-
+            
             return result;
         }
+
+
 
         public static List<Message> GetUnreadMessages(string senderId, string receiverId)
         {
