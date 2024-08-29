@@ -1,26 +1,51 @@
 ﻿//using Windows.Networking.NetworkOperators;
 
+//using Microsoft.UI.Xaml.Navigation;
+
 namespace Buck
 {
     public partial class MainPage : ContentPage
     {
         public Client client;
+        bool _isRunning;
         public MainPage(Client client)
         {
             InitializeComponent();
             this.client = client;
-            ShowConversations();
-            AddNewButton();
+            ShowConversationsAndButton();
+            InitializeConversationRefresh();
+        }
+        protected override void OnAppearing()
+        {
+            System.Diagnostics.Debug.WriteLine("uso u appearing kod maina");
+            base.OnAppearing();
+            InitializeConversationRefresh();
+        }
+        private async void InitializeConversationRefresh()
+        {
+            int secondsForRefresh = 5;
+            //System.Diagnostics.Debug.WriteLine("uso u init");
+            _isRunning = true;
+            while (_isRunning)
+            {
+                ShowConversationsAndButton();
+                System.Diagnostics.Debug.WriteLine("I ovaj jbt         ");
+
+                await Task.Delay(secondsForRefresh * 1000);
+            }
+
         }
 
-        private void ShowConversations()
+        private void ShowConversationsAndButton()
         {
+            ChatStackLayout.Clear();
             List<(string SenderId, int UnreadCount)> unreadMessages = Message.GetUnreadMessagesBySender(client.Username);
 
             foreach (var item in unreadMessages)
             {
                 AddChat(item.SenderId, item.UnreadCount);
             }
+            AddNewButton();
         }
 
         private async void OnMenuClicked(object sender, EventArgs e)
@@ -115,7 +140,8 @@ namespace Buck
 
         private void OnChatTapped(string username)
         {
-            DisplayAlert("HE:", username, "dd");
+            var chatPage = new ChatPage(client, username);
+            Navigation.PushAsync(chatPage);
         }
 
         private void AddNewButton()
@@ -137,6 +163,14 @@ namespace Buck
         private async void SendNewMessageAsync(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new NewChatPage(client));
+
+            await Navigation.PopAsync();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _isRunning = false;
         }
     }
 

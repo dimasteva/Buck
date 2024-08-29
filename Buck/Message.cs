@@ -16,6 +16,12 @@ namespace Buck
             get { return _content; }
             set { _content = value; }
         }
+        public string Receiver
+        {
+            get { return _receiver; }
+            set { _receiver = value; }
+        }
+
         DateTime _timestamp;
 
         public Message(string sender, string receiver, string content, DateTime timestamp)
@@ -146,6 +152,74 @@ namespace Buck
             System.Diagnostics.Debug.WriteLine("uspesno se izvrsio getunreadmessages");
             return messages;
         }
+
+        public static List<Message> GetAllReadMessages(string senderId, string receiverId, int numberOfMessages)
+        {
+            var messages = new List<Message>();
+            try
+            {
+                using (var connection = new MySqlConnection(LoginPage.connectionString))
+                {
+                    connection.Open();
+                    // System.Diagnostics.Debug.WriteLine("otvorio konekciju");
+
+                    // SQL query sa ORDER BY i LIMIT klauzulama
+                    string query = @"
+                SELECT senderId, receiverId, content, timestamp 
+                FROM Messages 
+                WHERE ((receiverId = @ReceiverId 
+                AND senderId = @SenderId)
+                OR (receiverId = @SenderId AND senderId = @ReceiverId))
+                AND isRead = 1 
+                ORDER BY timestamp DESC
+                LIMIT @NumberOfMessages;";
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ReceiverId", receiverId);
+                        command.Parameters.AddWithValue("@SenderId", senderId);
+                        command.Parameters.AddWithValue("@NumberOfMessages", numberOfMessages); // Dodajemo broj poruka kao parametar
+                        System.Diagnostics.Debug.WriteLine("ovde je linija1");
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                //System.Diagnostics.Debug.WriteLine("ovde je linija2");
+                                var senderIdValue = reader.GetString("senderId");
+                                //System.Diagnostics.Debug.WriteLine(senderIdValue);
+                                var receiverIdValue = reader.GetString("receiverId");
+                                //System.Diagnostics.Debug.WriteLine(receiverIdValue);
+                                var contentValue = reader.GetString("content");
+                                //System.Diagnostics.Debug.WriteLine(contentValue);
+
+                                DateTime timestampValue = DateTime.Now;
+                                try
+                                {
+                                    timestampValue = reader.GetDateTime("timestamp");
+                                }
+                                catch (Exception e)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(e.ToString());
+                                }
+
+                                var message = new Message(senderIdValue, receiverIdValue, contentValue, timestampValue);
+                                System.Diagnostics.Debug.WriteLine("ovde je linija3");
+
+                                messages.Add(message);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (MySqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine("PUKO GetUnreadMessages: " + e.Message);
+            }
+            messages.Reverse();
+            return messages;
+        }
+
 
         public static async Task MarkMessagesAsReadAsync(string senderId, string receiverId)
         {

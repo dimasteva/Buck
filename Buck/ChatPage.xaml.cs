@@ -16,9 +16,30 @@ public partial class ChatPage : ContentPage
 		_client = client;
 		CreateReceiverLabel();
         //System.Diagnostics.Debug.WriteLine("kreiro labelu ");
+        int numberOfMessages = 10;
+        LoadOldMessages(numberOfMessages);
         int checkDatabaseIntervalSeconds = 5;
         StartChecking(checkDatabaseIntervalSeconds);
         //System.Diagnostics.Debug.WriteLine("startovo cekiranje");
+        System.Diagnostics.Debug.WriteLine("zabrsio konstruktor");
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _isRunning = true;
+    }
+
+    private void LoadOldMessages(int numberOfMessages)
+    {
+        List <Message> messages = Message.GetAllReadMessages(_receiver, _client.Username, numberOfMessages);
+        foreach (var message in messages)
+        {
+            if (message.Receiver == _receiver)
+            {
+                ShowMessage(message.Content);
+            } else
+                ShowMessage(message.Content, "received");
+        }
     }
 
     private async void StartChecking(int seconds)
@@ -27,7 +48,7 @@ public partial class ChatPage : ContentPage
         while(_isRunning)
         {
             CheckNewMessages();
-            System.Diagnostics.Debug.WriteLine("proso checkmessages");
+            System.Diagnostics.Debug.WriteLine("ON SE I DALJE IZVRSAVA");
 
             await Task.Delay(seconds * 1000);
         }
@@ -39,7 +60,7 @@ public partial class ChatPage : ContentPage
         System.Diagnostics.Debug.WriteLine("proso getunreadmessages");
         foreach (var message in unreadMessages)
         {
-            ShowMessageAsync(message.Content, "received");
+            ShowMessage(message.Content, "received");
         }
         await Message.MarkMessagesAsReadAsync(_receiver, _client.Username);
     }
@@ -54,11 +75,11 @@ public partial class ChatPage : ContentPage
 			await DisplayAlert("Error", "Message could not be send, try again later", "OK");
 			return;
 		}
-		ShowMessageAsync(content);
+		ShowMessage(content);
 		eMessage.Text = "";
 	}
 
-    private void ShowMessageAsync(string content, string type = "sent")
+    private void ShowMessage(string content, string type = "sent")
     {
         int maxCharMessageWidth = 80;
         AddNewLineCharacterInterval(ref content, maxCharMessageWidth);
