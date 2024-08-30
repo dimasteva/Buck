@@ -61,7 +61,7 @@ namespace Buck
                     await Navigation.PushAsync(new SignUpPage());
                     break;
                 case "Profile":
-                    await Navigation.PushAsync(new LoginPage());
+                    await Navigation.PushAsync(new ProfilePage(client));
                     break;
             }
         }

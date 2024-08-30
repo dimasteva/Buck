@@ -8,30 +8,25 @@ namespace Buck
 {
     public class Client
     {
-        private string _username;
-        private string _password;
-        private string _name;
-        private string _lastName;
-        private string _email;
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
 
-        public string Username
-        {
-            get { return _username; }
-            set { _username = value; }
-        }
 
         public Client(string username, string password, string name, string lastName, string email)
         {
-            _username = username;
-            _password = password;
-            _name = name;
-            _lastName = lastName;
-            _email = email;
+            Username = username;
+            Password = password;
+            Name = name;
+            LastName = lastName;
+            Email = email;
         }
 
         public async Task<bool> CreateAccountAsync()
         {
-            bool validUsernameAndMailResult = await IsUsernameOrEmailExistsAsync(_username, _email);
+            bool validUsernameAndMailResult = await IsUsernameOrEmailExistsAsync(Username, Email);
             if (!validUsernameAndMailResult)
             {
                 return false;
@@ -46,11 +41,11 @@ namespace Buck
 
                     using (var cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Username", _username);
-                        cmd.Parameters.AddWithValue("@Password", _password);
-                        cmd.Parameters.AddWithValue("@Name", _name);
-                        cmd.Parameters.AddWithValue("@LastName", _lastName);
-                        cmd.Parameters.AddWithValue("@Email", _email);
+                        cmd.Parameters.AddWithValue("@Username", Username);
+                        cmd.Parameters.AddWithValue("@Password", Password);
+                        cmd.Parameters.AddWithValue("@Name", Name);
+                        cmd.Parameters.AddWithValue("@LastName", LastName);
+                        cmd.Parameters.AddWithValue("@Email", Email);
 
                         await cmd.ExecuteNonQueryAsync();
                         return true;
@@ -191,6 +186,49 @@ namespace Buck
             }
 
             return result.Count > 0 ? result : null; // Vraća null ako nema rezultata
+        }
+
+        public async Task<bool> SyncDataAsync()
+        {
+            string query = @"
+            UPDATE Client 
+            SET 
+                password = @Password, 
+                clientName = @Name, 
+                clientLastName = @LastName, 
+                email = @Email
+            WHERE 
+                username = @Username;";
+
+            try
+            {
+                using (var connection = new MySqlConnection(LoginPage.connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        // Add parameters to prevent SQL injection
+                        command.Parameters.AddWithValue("@Username", Username);
+                        command.Parameters.AddWithValue("@Password", Password);
+                        command.Parameters.AddWithValue("@Name", Name);
+                        command.Parameters.AddWithValue("@LastName", LastName);
+                        command.Parameters.AddWithValue("@Email", Email);
+
+                        // Execute the query asynchronously
+                        int result = await command.ExecuteNonQueryAsync();
+
+                        // Check if any rows were affected
+                        return result > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or display the error as needed
+                System.Diagnostics.Debug.WriteLine("Error", $"Failed to sync data: {ex.Message}", "OK");
+                return false;
+            }
         }
     }
 }

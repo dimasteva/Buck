@@ -5,7 +5,6 @@ namespace Buck;
 
 public partial class SignUpPage : ContentPage
 {
-    private string name, lastName, email, password, repeatedPassword, username;
 	public SignUpPage()
 	{
 		InitializeComponent();
@@ -19,41 +18,41 @@ public partial class SignUpPage : ContentPage
 		await Navigation.PopToRootAsync();
 	}
 
-    private async Task<bool> CheckCredentialsAsync()
+    public async Task<bool> CheckCredentialsAsync(Page context, string username, string name, string lastName, string email, string password, string repeatedPassword)
     {
         if (!IsValidUsername(username))
         {
-            await DisplayAlert("Validation Error", "Invalid username. Username must be between 5 and 20 characters long, must start with a letter and can only contain letters and numbers, with no spaces.", "OK");
+            await context.DisplayAlert("Validation Error", "Invalid username. Username must be between 5 and 20 characters long, must start with a letter and can only contain letters and numbers, with no spaces.", "OK");
             return false;
         }
 
         if (!IsValidName(name))
         {
-            await DisplayAlert("Validation Error", "Invalid name. It must start with an uppercase letter and contain only alphabetic characters.", "OK");
+            await context.DisplayAlert("Validation Error", "Invalid name. It must start with an uppercase letter and contain only alphabetic characters.", "OK");
             return false;
         }
 
         if (!IsValidLastName(lastName))
         {
-            await DisplayAlert("Validation Error", "Invalid last name. It must start with an uppercase letter and contain only alphabetic characters.", "OK");
+            await context.DisplayAlert("Validation Error", "Invalid last name. It must start with an uppercase letter and contain only alphabetic characters.", "OK");
             return false;
         }
 
         if (!IsValidEmail(email))
         {
-            await DisplayAlert("Validation Error", "Invalid email format.", "OK");
+            await context.DisplayAlert("Validation Error", "Invalid email format.", "OK");
             return false;
         }
 
         if (!IsValidPassword(password))
         {
-            await DisplayAlert("Validation Error", "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and no spaces.", "OK");
+            await context.DisplayAlert("Validation Error", "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and no spaces.", "OK");
             return false;
         }
 
         if (password != repeatedPassword)
         {
-            await DisplayAlert("Validation Error", "Passwords do not match.", "OK");
+            await context.DisplayAlert("Validation Error", "Passwords do not match.", "OK");
             return false;
         }
 
@@ -113,7 +112,7 @@ public partial class SignUpPage : ContentPage
 
     private bool IsValidPassword(string password)
     {
-        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
+        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])[A-Za-z\d@$!%*?&()\-_=+{}[\]#^~`<>.,:;'""|\\]{8,}$";
 
         if (password.Contains(" "))
         {
@@ -124,14 +123,14 @@ public partial class SignUpPage : ContentPage
     }
     private async void SignUpClicked(object sender, EventArgs e)
     {
-        username = eUsername.Text;
-        name = eName.Text;
-        lastName = eLastName.Text;
-        email = eEmail.Text;
-        password = ePassword.Text;
-        repeatedPassword = eRepeatPassword.Text;
+        string username = eUsername.Text;
+        string name = eName.Text;
+        string lastName = eLastName.Text;
+        string email = eEmail.Text;
+        string password = ePassword.Text;
+        string repeatedPassword = eRepeatPassword.Text;
 
-        bool checkCredentialsResult = await CheckCredentialsAsync();
+        bool checkCredentialsResult = await CheckCredentialsAsync(this, username, name, lastName, email, password, repeatedPassword);
         if (!checkCredentialsResult)
         {
             return;
