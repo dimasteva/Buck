@@ -212,9 +212,8 @@ namespace Buck
                 SELECT senderId, receiverId, content, timestamp 
                 FROM Messages 
                 WHERE ((receiverId = @ReceiverId 
-                AND senderId = @SenderId)
+                AND senderId = @SenderId AND isRead = 1)
                 OR (receiverId = @SenderId AND senderId = @ReceiverId))
-                AND isRead = 1 
                 ORDER BY timestamp DESC
                 LIMIT @NumberOfMessages;";
 

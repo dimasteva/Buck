@@ -42,4 +42,9 @@ public partial class LoginPage : ContentPage
 		await Navigation.PopToRootAsync();
     }
 
+	private async void ForgotPasswordClickedAsync(object sender, TappedEventArgs e)
+	{
+
+	}
+
 }

@@ -13,10 +13,27 @@
                      />
     </ContentPage.ToolbarItems>
 
-    <ScrollView>
-        <StackLayout x:Name="ChatStackLayout" Padding="10" Spacing="10">
-            
-        </StackLayout>
-    </ScrollView>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollView Grid.Row="0" Grid.Column="0">
+            <StackLayout x:Name="ChatStackLayout" Padding="10" Spacing="10">
+
+            </StackLayout>
+        </ScrollView>
+
+        <AbsoluteLayout Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
+            <Button x:Name="newConversationButton" 
+                    Text="+" 
+                    CornerRadius="25" 
+                    WidthRequest="50" 
+                    HeightRequest="50" 
+                    Clicked="SendNewMessageAsync"/>
+        </AbsoluteLayout>
+    </Grid>
+    
 
 </ContentPage>

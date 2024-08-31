@@ -12,7 +12,8 @@ namespace Buck
         {
             InitializeComponent();
             this.client = client;
-            ShowConversationsAndButton();
+            ShowConversations();
+            //AddNewButton();
             InitializeConversationRefresh();
         }
         protected override void OnAppearing()
@@ -28,7 +29,7 @@ namespace Buck
             _isRunning = true;
             while (_isRunning)
             {
-                ShowConversationsAndButton();
+                ShowConversations();
                 System.Diagnostics.Debug.WriteLine("I ovaj jbt         ");
 
                 await Task.Delay(secondsForRefresh * 1000);
@@ -36,7 +37,7 @@ namespace Buck
 
         }
 
-        private void ShowConversationsAndButton()
+        private void ShowConversations()
         {
             ChatStackLayout.Clear();
             List<(string SenderId, int UnreadCount)> unreadMessages = Message.GetUnreadOrZeroMessagesBySender(client.Username);
@@ -45,7 +46,6 @@ namespace Buck
             {
                 AddChat(item.SenderId, item.UnreadCount);
             }
-            AddNewButton();
         }
 
         private async void OnMenuClicked(object sender, EventArgs e)
@@ -158,7 +158,7 @@ namespace Buck
             };
             newConversationButton.Clicked += SendNewMessageAsync;
 
-            ChatStackLayout.Children.Add(newConversationButton);
+            //ChatStackLayout.Children.Add(newConversationButton);
         }
 
         private async void SendNewMessageAsync(object sender, EventArgs e)

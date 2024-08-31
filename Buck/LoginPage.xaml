@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Buck.LoginPage"
-             Title="LoginPage">
+             Title="Buck">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -14,10 +14,10 @@
         </Grid.RowDefinitions>
 
         <Label
-            Text="Buck"
+            Text="Log in"
             Grid.Row="0"
             Grid.Column="0"
-            FontSize="Header"
+            FontSize="Large"
             HorizontalOptions="Center"
             />
 
@@ -55,24 +55,39 @@
         <Label
             Grid.Row="4"
             Grid.Column="0"
-            Text="Don't have an account?"
-            HorizontalOptions="Center"
-            />
-
-        <Label
-            Grid.Row="5"
-            Grid.Column="0"
-            HorizontalOptions="Center"
-            TextColor="Blue">
+            HorizontalOptions="Center">
             <Label.FormattedText>
                 <FormattedString>
-                    <Span Text="Sign up" TextColor="Blue" TextDecorations="Underline"/>
+                    <Span Text="Forgot Password?"/>
                 </FormattedString>
             </Label.FormattedText>
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="SignUpClickedAsync"/>
             </Label.GestureRecognizers>
         </Label>
+
+        <VerticalStackLayout Grid.Row="5" Grid.Column="0">
+            <Label
+                Text="Don't have an account?"
+                HorizontalOptions="Center"
+                />
+
+            <Label
+                HorizontalOptions="Center"
+                TextColor="Blue">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Sign up" TextColor="Blue" TextDecorations="Underline"/>
+                    </FormattedString>
+                </Label.FormattedText>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ForgotPasswordClickedAsync"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </VerticalStackLayout>
+        
+
+        
 
 
     </Grid>
