@@ -110,7 +110,7 @@ public partial class SignUpPage : ContentPage
         return Regex.IsMatch(email, pattern);
     }
 
-    private bool IsValidPassword(string password)
+    public bool IsValidPassword(string password)
     {
         string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])[A-Za-z\d@$!%*?&()\-_=+{}[\]#^~`<>.,:;'""|\\]{8,}$";
 

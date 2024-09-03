@@ -62,7 +62,7 @@
                 </FormattedString>
             </Label.FormattedText>
             <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="SignUpClickedAsync"/>
+                <TapGestureRecognizer Tapped="ForgotPasswordClickedAsync"/>
             </Label.GestureRecognizers>
         </Label>
 
@@ -81,7 +81,7 @@
                     </FormattedString>
                 </Label.FormattedText>
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="ForgotPasswordClickedAsync"/>
+                    <TapGestureRecognizer Tapped="SignUpClickedAsync"/>
                 </Label.GestureRecognizers>
             </Label>
         </VerticalStackLayout>

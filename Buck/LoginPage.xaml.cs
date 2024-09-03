@@ -44,7 +44,9 @@ public partial class LoginPage : ContentPage
 
 	private async void ForgotPasswordClickedAsync(object sender, TappedEventArgs e)
 	{
+		var changePasswordPage = new ChangePasswordPage();
 
-	}
+        await Navigation.PushAsync(changePasswordPage);
+    }
 
 }

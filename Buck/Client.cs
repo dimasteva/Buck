@@ -230,5 +230,82 @@ namespace Buck
                 return false;
             }
         }
+
+        public static async Task<bool> UpdatePasswordAsync(string email, string newPassword)
+        {
+            // Check if the email and new password are valid
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(newPassword))
+            {
+                return false;
+            }
+
+            // Create SQL command to update the password for the specified email
+            string query = "UPDATE Client SET password = @newPassword WHERE email = @Email";
+
+            try
+            {
+                // Create a connection to the database
+                using (var connection = new MySqlConnection(LoginPage.connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Create a MySQL command with parameters
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@newPassword", newPassword);
+                        command.Parameters.AddWithValue("@Email", email);
+
+                        // Execute the command and check the number of affected rows
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        // Return true if at least one row was updated, otherwise false
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                //System.Diagnostics.Debug.WriteLine("ALOOOOO" + e.ToString());
+                return false;
+            }
+        }
+
+        public static async Task<bool> IsEmailPresentAsync(string email)
+        {
+            // Proveri da li je email validan
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return false;
+            }
+
+            // SQL upit za proveru postojanja emaila u tabeli
+            string query = "SELECT COUNT(*) FROM Client WHERE email = @Email";
+
+            try
+            {
+                // Kreiraj konekciju ka bazi
+                using (var connection = new MySqlConnection(LoginPage.connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    // Kreiraj MySQL komandu sa parametrima
+                    using (var command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Email", email);
+
+                        // Izvrši komandu i dobavi broj redova
+                        var result = await command.ExecuteScalarAsync();
+
+                        // Vraća true ako je email prisutan (tj. ako COUNT > 0)
+                        return Convert.ToInt32(result) > 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("ALOOOOO" + e.ToString());
+                return false;
+            }
+        }
     }
 }
