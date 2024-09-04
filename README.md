@@ -12,7 +12,7 @@ This is a real-time messaging application built with .NET MAUI. It provides user
 
 ## Technologies Used
 
-- **.NET MAUI**: Framework for building cross-platform applications.
-- **C#**: Programming language used for developing the application.
-- **XAML**: Markup language used for designing the user interface.
-- **SQLite**: Local database for storing user profile information.
+- **.NET MAUI**
+- **C#**
+- **XAML**
+- **SQLite**
