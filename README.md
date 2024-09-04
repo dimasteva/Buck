@@ -9,3 +9,10 @@ This is a real-time messaging application built with .NET MAUI. It provides user
 - **User Authentication**: Secure login to access the application.
 - **Real-Time Messaging**: Send and receive messages instantly with other users.
 - **Profile Management**: Update and manage your user profile.
+
+## Technologies Used
+
+- **.NET MAUI**: Framework for building cross-platform applications.
+- **C#**: Programming language used for developing the application.
+- **XAML**: Markup language used for designing the user interface.
+- **SQLite**: Local database for storing user profile information.
