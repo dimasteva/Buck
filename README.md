@@ -15,4 +15,4 @@ This is a real-time messaging application built with .NET MAUI. It provides user
 - **.NET MAUI**
 - **C#**
 - **XAML**
-- **SQLite**
+- **MySQL**
